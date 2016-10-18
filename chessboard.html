@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Chess Board</title>
+<style type="text/css" media="screen">
+    canvas, img { display:block; margin:1em auto; }
+    #goBoard { background:url(./img/background.jpg) }
+ </style>
+</head>
+<body>
+<div style="position: relative;">
+<canvas id="goBoard" width="800" height="800" style="position: absolute; left: 0; top: 0;z-index: 0;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+<canvas id="stoneLayer" width="800" height="800" style="position: absolute; left: 0; top: 0;z-index: 1;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+</div>
+<script type="text/javascript" src="js/board.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", init, false);
+function init(){
+	var stoneCanvas = document.getElementById("stoneLayer");
+	stoneCanvas.addEventListener("mousedown", getPosition, false);
+}
+function getPosition(event){
+	var x = new Number();
+	var y = new Number();
+	var stoneCanvas = document.getElementById("stoneLayer");
+
+	if (event.x != undefined && event.y != undefined)
+	{
+		x = event.x;
+		y = event.y;
+	}
+	else // Firefox method to get the position
+	{
+		x = event.clientX + document.body.scrollLeft +
+		document.documentElement.scrollLeft;
+		y = event.clientY + document.body.scrollTop +
+		document.documentElement.scrollTop;
+	}
+	var rect = stoneCanvas.getBoundingClientRect();
+	x -= rect.left;
+	y -= rect.top;
+	xOffset = x%40;
+	yOffset = y%40;
+	if (xOffset > 20) {
+		xOffset = xOffset - 40;
+	}
+	if (yOffset > 20) {
+		yOffset = yOffset - 40;
+	}
+	if( Math.abs(xOffset) < 15 && Math.abs(yOffset) < 15) {
+		var stoneCtx=stoneCanvas.getContext("2d");
+		var xCenter = x - xOffset;
+		var yCenter = y - yOffset;
+        if (xCenter < 40 || xCenter > 760) {
+            return;
+        }
+        if (yCenter < 40 || yCenter > 760) {
+            return;
+        }
+		var xPos = xCenter/40 - 1;
+		var yPos = yCenter/40 - 1;
+		if (currentColor == 1) {
+			if (play(chessBoard, xPos, yPos, currentColor)) {
+				drawBlack(stoneCtx, xCenter, yCenter);
+				currentColor = 2;
+			}
+		}
+		else {
+			if (play(chessBoard, xPos, yPos, currentColor)) {
+				drawWhite(stoneCtx, xCenter, yCenter);
+				currentColor = 1;
+			}
+		}
+	}
+}
+</script>
+
+</body>
+</html>
