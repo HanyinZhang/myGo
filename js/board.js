@@ -71,18 +71,24 @@ function isValid(chessBoard, row, column, color, ctx, xOffset, yOffset) {
 		if(chessBoard[currentNeighbor[0]][currentNeighbor[1]] == color%2 + 1) {
 			chessBoard[row][column] = color;
 			var deadStones = findDead(chessBoard, currentNeighbor[0], currentNeighbor[1], color%2 + 1);
+			chessBoard[row][column] = 0;
 			if (deadStones.length > 0) {
 				oppositeNeighbor = oppositeNeighbor & false;
 				for (var j = 0; j < deadStones.length; j++) {
-					tiZi(chessBoard, deadStones[j][0], deadStones[j][1], ctx, xOffset, yOffset);
+					take(chessBoard, deadStones[j][0], deadStones[j][1], ctx, xOffset, yOffset);
 				}
 			}
 			else {
 				oppositeNeighbor = oppositeNeighbor & true;
 			}
-			chessBoard[row][column] = 0;
 		}
 		else {
+			chessBoard[row][column] = color;
+			var deadSameStones = findDead(chessBoard, row, column, color);
+			chessBoard[row][column] = 0;
+			if (deadSameStones.length > 0){
+				return false;
+			}
 			oppositeNeighbor = oppositeNeighbor & false;
 		}
 	}
@@ -153,7 +159,7 @@ function initBoard(chessBoard) {
 	}
 }
 
-function tiZi(chessBoard, row, column, ctx, xOffset, yOffset) {
+function take(chessBoard, row, column, ctx, xOffset, yOffset) {
 	chessBoard[row][column] = 0;
 	removeStone(ctx, row*40 + xOffset, column*40 + yOffset);
 }
