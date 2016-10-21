@@ -44,6 +44,10 @@ function hasQi(chessBoard, row, column) {
 	return false;
 }
 
+function isKo(){
+    
+}
+
 function getSameNeibghors(chessBoard, row, column, color, result) {
 	var neighbors = getNeighbor(row, column);
 	for(var i = 0; i < neighbors.length; i++){
@@ -64,8 +68,17 @@ function isValid(chessBoard, row, column, color, ctx, xOffset, yOffset) {
 	if (chessBoard[row][column] > 0) {
 		return false;
 	}
+    if (koQueue.length > 0) {
+        if (koQueue[0][0] == row && koQueue[0][1] == column) {
+            return false;
+        }
+        else {
+            koQueue.shift();
+        }
+    }
 	var neighbor = getNeighbor(row, column);
 	var oppositeNeighbor = true;
+    var takenStones = [];
 	for(var i = 0; i < neighbor.length; i++){
 		var currentNeighbor = neighbor[i];
 		if(chessBoard[currentNeighbor[0]][currentNeighbor[1]] == color%2 + 1) {
@@ -77,6 +90,7 @@ function isValid(chessBoard, row, column, color, ctx, xOffset, yOffset) {
 				for (var j = 0; j < deadStones.length; j++) {
 					take(chessBoard, deadStones[j][0], deadStones[j][1], ctx, xOffset, yOffset);
 				}
+                Array.prototype.push.apply(takenStones,deadStones);
 			}
 			else {
 				oppositeNeighbor = oppositeNeighbor & true;
@@ -87,11 +101,29 @@ function isValid(chessBoard, row, column, color, ctx, xOffset, yOffset) {
 			var deadSameStones = findDead(chessBoard, row, column, color);
 			chessBoard[row][column] = 0;
 			if (deadSameStones.length > 0){
-				return false;
+				oppositeNeighbor = oppositeNeighbor & true;
 			}
-			oppositeNeighbor = oppositeNeighbor & false;
+            else {
+                oppositeNeighbor = oppositeNeighbor & false;
+            }
 		}
 	}
+    if (takenStones.length == 1) {
+        chessBoard[takenStones[0][0]][takenStones[0][1]] = color%2 + 1;
+        var isKo = true;
+        for(var j = 0; j < neighbor.length; j++){
+            if(chessBoard[neighbor[j][0]][neighbor[j][1]] == color%2 + 1) {
+                isKo = isKo & true;
+            }
+            else  {
+                isKo = isKo & false;
+            }
+        }
+        if(isKo) {
+            koQueue.push(takenStones[0]);
+        }
+        chessBoard[takenStones[0][0]][takenStones[0][1]] = 0;
+    }
 	if (oppositeNeighbor) {
 		return false;
 	}
@@ -176,5 +208,6 @@ var c=document.getElementById("goBoard");
 var ctx=c.getContext("2d");
 drawBoard(ctx);
 var chessBoard = create2DArray(19,19);
+var koQueue = [];
 initBoard(chessBoard);
 var currentColor = 1;
