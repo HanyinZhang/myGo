@@ -1,3 +1,9 @@
+function Shou(color, x, y) {
+	this.color = color;
+	this.x = x;
+	this.y = y;
+}
+
 function drawBlack(ctx, x, y) {
 	ctx.beginPath();
 	ctx.arc(x, y, 16, 0, 2 * Math.PI, true);
@@ -167,6 +173,8 @@ function take(chessBoard, row, column, ctx, xOffset, yOffset) {
 function play(chessBoard, row, column, color, ctx, xOffset, yOffset) {
 	if (isValid(chessBoard, row, column, color, ctx, xOffset, yOffset)) {
 		chessBoard[row][column] = color;
+		var currentShou = new Shou(color, row, column);
+		shouList.push(currentShou);
 		return true;
 	}
 	return false;
@@ -178,3 +186,4 @@ drawBoard(ctx);
 var chessBoard = create2DArray(19,19);
 initBoard(chessBoard);
 var currentColor = 1;
+var shouList = [];

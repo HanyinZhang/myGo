@@ -2,17 +2,22 @@
 <html>
 <head>
 <title> Chess Board</title>
+<link rel="stylesheet" type="text/css" href="css/main.css">
 <style type="text/css" media="screen">
     canvas, img { display:block; margin:1em auto; }
     #goBoard { background:url(./img/background.jpg) }
  </style>
 </head>
 <body>
-<div style="position: relative;">
+<div class="chessboard-div">
 <canvas id="goBoard" width="800" height="800" style="position: absolute; left: 0; top: 0;z-index: 0;">
 Your browser does not support the HTML5 canvas tag.</canvas>
 <canvas id="stoneLayer" width="800" height="800" style="position: absolute; left: 0; top: 0;z-index: 1;">
 Your browser does not support the HTML5 canvas tag.</canvas>
+</div>
+<div class="button-bar">
+	<div class="button left-arrow" onclick="goPrevious()"></div>
+    <div class="button right-arrow" onclick=""></div>
 </div>
 <script type="text/javascript" src="js/board.js"></script>
 <script>
@@ -74,6 +79,14 @@ function getPosition(event){
 			}
 		}
 	}
+}
+function goPrevious(){
+	var stoneCanvas = document.getElementById("stoneLayer");
+	var ctx=stoneCanvas.getContext("2d");
+	var previousShou = shouList.pop();
+	var x = previousShou.x;
+	var y = previousShou.y;
+	take(chessBoard, x, y, ctx, 40, 40);
 }
 </script>
 
