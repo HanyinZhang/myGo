@@ -42,13 +42,14 @@
   height: auto; 
   padding: 40px;
   position: relative;
-  float: left;
-  padding: 10px;    
+  float: left;   
 }
 
 .chessboard-div {
   position: relative;
   float: left;
+  width: 800px;
+  height: 800px;
   padding: 10px;
 }
 .button:hover { background: #0585e8; }

@@ -220,3 +220,4 @@ var koQueue = [];
 initBoard(chessBoard);
 var currentColor = 1;
 var shouList = [];
+var removedStoneList = [];
